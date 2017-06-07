@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import QuestionList from './tests/questions' ;
 import axios from 'axios' ;
+import { withRouter } from 'react-router';
 
 const TitleView = ({text}) => {
   return (
@@ -65,6 +66,7 @@ const SubmitView = ({ onClick }) => (
   <input type="submit" value="Submit" onClick={onClick}/>
 )
 
+
 class QuestionFormView extends React.Component {
   constructor(props) {
     super(props);
@@ -74,11 +76,17 @@ class QuestionFormView extends React.Component {
   }
 
   submitAnswer(){
+    const { history } = this.props ;
     axios.post('/submit',{
       answerList : this.state.answerList
     })
     .then(function (response) {
-      console.log(response);
+      const status = parseInt(response.status,10);
+      if ( status === 200 ){
+        history.push('/submit');
+      } else {
+        ;
+      }
     })
   };
 
@@ -104,11 +112,13 @@ class App extends Component {
   render() {
     return (
       <div>
-        <QuestionFormView/ >
+        <QuestionFormViewWithRouter />
       </div>
     );
   }
 }
 
+
+const QuestionFormViewWithRouter = withRouter(QuestionFormView);
 
 export default App;
