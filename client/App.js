@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import QuestionList from './tests/questions' ;
 import axios from 'axios' ;
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux' ;
+import { changeAnswer } from './actions' ;
+import Option from './containers/Option' ;
+import Submit from './containers/Submit' ;
+
 
 const TitleView = ({text}) => {
   return (
@@ -11,29 +16,24 @@ const TitleView = ({text}) => {
   )
 }
 
-const OptionView = ({questionIndex , text , index , onChange}) => (
-  <div>
-    <input type="radio" name={questionIndex} value={index} onChange={onChange.bind(this,questionIndex,index)} />{text}
-  </div>
-)
 
-const OptionsView = ({options,questionIndex,onChange}) => {
+const OptionsView = ({options,questionIndex}) => {
   return (
     <div>
     {
       options.map((option,index)=>(
-        <OptionView 
+        <Option 
           key={index} 
           text={option}
           index={index}
           questionIndex={questionIndex}
-          onChange={onChange}
         />
       ))
     }
     </div>
   )
 }
+
 const QuestionView = ({title,options,questionIndex,onChange}) => {
   return (
     <li>
@@ -62,17 +62,31 @@ const QuestionListView = ({list , onChange}) => (
   </ol>
 )
 
-const SubmitView = ({ onClick }) => (
-  <input type="submit" value="Submit" onClick={onClick}/>
-)
+// const mapStateToProps = (state) => {
+//   return {
+//     answerList: state.answerList 
+//   }
+// }
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     onOptionClick: (index,answer) => {
+//       dispatch(changeAnswer(index,answer)) ;
+//     }
+//   }
+// }
+
+// const Submit = connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(Submit) ;
+
 
 
 class QuestionFormView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {answerList: []};
     this.submitAnswer = this.submitAnswer.bind(this);
-    this.changeAnswer = this.changeAnswer.bind(this);
   }
 
   submitAnswer(){
@@ -90,23 +104,15 @@ class QuestionFormView extends React.Component {
     })
   };
 
-  changeAnswer(index,answer){
-    let newAnswerList = this.state.answerList.slice() ;
-    newAnswerList[index] = answer ;
-    this.setState({
-      answerList : newAnswerList 
-    })
-  }
   render() {
     return ( 
       <div>
-        <QuestionListView list={QuestionList} onChange={this.changeAnswer}/>
-        <SubmitView onClick={this.submitAnswer}/>
+        <QuestionListView list={QuestionList}/>
+        <Submit />
       </div>
     )
   }
 }
-
 
 class App extends Component {
   render() {
@@ -117,6 +123,10 @@ class App extends Component {
     );
   }
 }
+
+
+
+
 
 
 const QuestionFormViewWithRouter = withRouter(QuestionFormView);
