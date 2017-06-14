@@ -1,4 +1,5 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 
 const answerList = (state = [] , action) => {
   switch ( action.type ){
@@ -11,9 +12,16 @@ const answerList = (state = [] , action) => {
   }
 }
 
-const submitStatus = (state = '' , action) => {
-	console.log(action.response);
+const submitStatus = (state = { status : 'INIT' } , action) => {
+  switch ( action.type ){
+  	case 'SUBMIT_ANSWER_START':
+  	  return { status : 'START' } ;
+  	case 'SUBMIT_ANSWER_END' :
+  	  return { status : 'END' , response : action.response } ;
+  	case 'SUBMIT_ANSWER_ERROR' :
+  	  return { status : 'ERROR' , error : action.error } ;
+  }
   return state ;
 }
 
-export default combineReducers({ answerList , submitStatus });
+export default combineReducers({ answerList , submitStatus , routerReducer });

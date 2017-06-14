@@ -1,6 +1,22 @@
 import { connect } from 'react-redux' ;
 import SubmitView from '../components/SubmitView' ;
-import { submitAnswer } from '../actions' ; 
+import { submitAnswer , submitAnswerEnd , submitAnswerError } from '../actions' ; 
+import axios from 'axios' ;
+
+  // submitAnswer(){
+  //   const { history } = this.props ;
+  //   axios.post('/submit',{
+  //     answerList : this.state.answerList
+  //   })
+  //   .then(function (response) {
+  //     const status = parseInt(response.status,10);
+  //     if ( status === 200 ){
+  //       history.push('/submit');
+  //     } else {
+  //       ;
+  //     }
+  //   })
+  // };
 
 const mapStateToProps = (state) => {
   return {
@@ -11,16 +27,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onSubmitClick: (answerList) => {
-      dispatch(submitAnswer())
-      new Promiise(resolve => {
-        axios.post('/submit',{
-          answerList : answerList
-        })
-        .then((response) => {
-          resolve(response) ;
-        })
-      })
-      .then()
       dispatch(submitAnswer(answerList)) ;
     }
   }
@@ -30,5 +36,9 @@ const Submit = connect(
   mapStateToProps,
   mapDispatchToProps
 )(SubmitView) ;
+
+
+
+//const QuestionFormViewWithRouter = withRouter(QuestionFormView);
 
 export default Submit ;

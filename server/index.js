@@ -24,10 +24,8 @@ const port = process.env.PORT || 3000 ;
 const compiler = webpack(webpackConfig);
 const router = express.Router();
 
-app.use(bodyParser.json());     
-app.use(bodyParser.urlencoded({  
-  extended: true
-})); 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 // const IndexView = () => (
 // `<!doctype html>
@@ -57,41 +55,40 @@ app.use(webpackHotMiddleware(compiler, {
 app.use('/static', express.static(path.join(__dirname, '../','public'))) ;
 
 // app.get('/', (req,res) => {
-// 	const context = {} ;
-// 	const html = ReactDOMServer.renderToString(<IndexViewEntry location={req.url} context={context} />) ;
-// 	res.send(html);
+//   const context = {} ;
+//   const html = ReactDOMServer.renderToString(<IndexViewEntry location={req.url} context={context} />) ;
+//   res.send(html);
 // });
 
 router.get('/exam', function(req, res) {
-	res.sendFile(path.join(__dirname, '../','client','index.html'));
+  res.sendFile(path.join(__dirname, '../','client','index.html'));
 });
 
 router.get('/exam/:id', (req,res) => {
-	const QuestionListWithoutAnswer = QuestionList.map((question)=>{
-		return {...question,answer:undefined} ;
-	} );
-	res.json(QuestionListWithoutAnswer);
+  const QuestionListWithoutAnswer = QuestionList.map((question)=>{
+    return {...question,answer:undefined} ;
+  } );
+  res.json(QuestionListWithoutAnswer);
 });
 
 router.post('/submit', (req,res) => {
-	const result = calculateScore({
-		userAnswer : req.body.answerList ,
-		correctAnswer : QuestionList 
-	})
-	res.sendStatus(200);
+  const result = calculateScore({
+    userAnswer : req.body.answerList ,
+    correctAnswer : QuestionList 
+  })
+  res.sendStatus(200);
 });
-	
+  
 app.use('/', router);
 
 app.listen(port,()=>{
-	console.log('Listening!');
+  console.log('Listening!');
 })
 
 const calculateScore = ({ userAnswer , correctAnswer }) => {
-	console.log(userAnswer);
-	let correctCount = 0 ;
-	correctAnswer.forEach((question,index)=>{
-		correctCount = parseInt(question.answer,10) === parseInt(userAnswer[index],10) ? correctCount + 1 : correctCount ;
-	})
-	return correctCount ;
+  let correctCount = 0 ;
+  correctAnswer.forEach((question,index)=>{
+    correctCount = parseInt(question.answer,10) === parseInt(userAnswer[index],10) ? correctCount + 1 : correctCount ;
+  })
+  return correctCount ;
 }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import QuestionList from './tests/questions' ;
-import axios from 'axios' ;
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux' ;
 import { changeAnswer } from './actions' ;
@@ -86,7 +85,6 @@ const QuestionListView = ({list , onChange}) => (
 class QuestionFormView extends React.Component {
   constructor(props) {
     super(props);
-    this.submitAnswer = this.submitAnswer.bind(this);
   }
 
   submitAnswer(){
@@ -118,17 +116,12 @@ class App extends Component {
   render() {
     return (
       <div>
-        <QuestionFormViewWithRouter />
+        <QuestionFormView />
       </div>
     );
   }
 }
 
 
-
-
-
-
-const QuestionFormViewWithRouter = withRouter(QuestionFormView);
 
 export default App;
